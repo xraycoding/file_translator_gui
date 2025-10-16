@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Translator</title>
+  <link rel="icon" type="image/png" href="icons8-pixel-cat-50.png">
+  <script type="text/javascript" src="/eel.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>Translate TXT File</h2>
+  <select id="lang"></select><br>
+  <button onclick="selectFile()">Select TXT File</button>
+  <button onclick="translateFile()">Translate</button>
+  <pre id="output">Output will appear here...</pre>
+
+  <script>
+    let filePath = "";
+    let languages = [];
+
+    eel.get_languages()((langs) => {
+      const sel = document.getElementById("lang");
+      langs.forEach((l) => {
+        const opt = document.createElement("option");
+        opt.textContent = l;
+        sel.appendChild(opt);
+      });
+      languages = langs;
+    });
+
+    async function selectFile() {
+      filePath = await eel.select_file()();
+      document.getElementById("output").textContent = filePath
+        ? `Selected: ${filePath}`
+        : "No file selected.";
+    }
+
+    async function translateFile() {
+      if (!filePath) {
+        document.getElementById("output").textContent = "Please select a file first.";
+        return;
+      }
+      const lang = document.getElementById("lang").value;
+      document.getElementById("output").textContent = "Translating...";
+      const result = await eel.translate_file(filePath, lang)();
+      document.getElementById("output").textContent = result;
+    }
+  </script>
+</body>
+</html>

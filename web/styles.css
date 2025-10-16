@@ -1,0 +1,30 @@
+
+body {
+    background: #1e1e1e;
+    color: #fff;
+    font-family: sans-serif;
+    text-align: center;
+}
+select, button {
+    padding: 8px 12px;
+    margin: 6px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+button {
+    background: #0078d7;
+    color: white;
+    cursor: pointer;
+}
+pre {
+    text-align: center;
+    white-space: pre-wrap;
+    background: #111;
+    padding: 12px;
+    border-radius: 8px;
+    width: 90%;
+    margin: 12px auto;
+    height: 400px;
+    overflow-y: auto;
+}
