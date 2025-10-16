@@ -2,6 +2,9 @@ from tkinter import StringVar, TOP
 from tkinterdnd2 import TkinterDnD, DND_ALL
 import customtkinter as ctk
 from pathlib import Path
+from googletrans import Translator
+import asyncio
+
 
 
 class Tk(ctk.CTk, TkinterDnD.DnDWrapper):
@@ -19,9 +22,28 @@ def get_text(event):
             file_name = Path(file_path).name
         pathLabel.configure(text=f"File loaded:\n{file_path}")
         # Show file content in a new window or print to console
-        show_file_content(file_content,file_name)
+        translate_content(file_content,file_name)
     except Exception as e:
         pathLabel.configure(text=f"Error: {e}")
+
+def translate_content(content,name):
+    translator = Translator()
+    try:
+        if not content:
+            show_file_content("", name)
+            return
+        result = translator.translate(content, dest='en')
+        # handle async coroutine returned by some googletrans builds
+        if asyncio.iscoroutine(result):
+            result = asyncio.run(result)
+        # googletrans may return a single object or a list for long input; handle both
+        if isinstance(result, list):
+            result_text = "\n\n".join(t.text for t in result)
+        else:
+            result_text = result.text
+        show_file_content(result_text, name)
+    except Exception as e:
+        pathLabel.configure(text=f"Translation error: {e}")
 
 def show_file_content(content,name):
     # Display the file content in a new CTk window
